@@ -2,12 +2,17 @@ package main
 
 import (
 	"go_book_api/api"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	api.InitDB()
+	ginMode := os.Getenv("GIN_MODE")
+	if ginMode == "release" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	r := gin.Default()
 
 	r.POST("/book", api.CreateBook)
