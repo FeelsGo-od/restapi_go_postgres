@@ -1,3 +1,7 @@
+/*
+Package api provides RESTful handlers and middleware for managing a library of books.
+It includes functionality for creating, reading, updating, and deleting books, as well as generating JWT tokens for authentication.
+*/
 package api
 
 import (
@@ -13,6 +17,8 @@ import (
 
 var DB *gorm.DB
 
+// InitDB initializes the database connection using environment variables.
+// It loads the database configuration from a .env file and migrates the Book schema
 func InitDB() {
 	err := godotenv.Load()
 	if err != nil {
@@ -25,12 +31,14 @@ func InitDB() {
 		log.Fatal("Failed to connect to database", err)
 	}
 
-	// migrate the schema
+	// Migrate the schema
 	if err := DB.AutoMigrate(&Book{}); err != nil {
 		log.Fatal("Failed to migrate schema", err)
 	}
 }
 
+// CreateBook handles the creation of a new book in the database.
+// It expects a JSON payload with book details and responds with the created book.
 func CreateBook(c *gin.Context) {
 	var book Book
 
@@ -43,6 +51,8 @@ func CreateBook(c *gin.Context) {
 	ResponseJSON(c, http.StatusCreated, "Book created successfully", book)
 }
 
+// GetBook retrieves all books from the database.
+// It responds with a list of books.
 func GetBooks(c *gin.Context) {
 	var books []Book
 	DB.Find(&books)
